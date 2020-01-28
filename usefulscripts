@@ -1,0 +1,5 @@
+#runs in the top directory to see all CORRECT.LP final output tables in the same place
+
+find . -name "CORRECT.LP" | xargs grep "WILSON STATISTICS OF DATA SET" -B 26 > correct.txt
+
+gedit correct.txt
