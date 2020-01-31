@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 # C.Orr 2020
 
 #script to run pointless and aimless on XDS_ASCII with default params
