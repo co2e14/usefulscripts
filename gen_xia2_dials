@@ -1,0 +1,165 @@
+#!/bin/bash
+# C.Orr 2020
+rm xia2.sh
+rm xia2_dials.phil
+
+echo "Making the files for you. Type gen_xia2_xds -h for help"
+
+while getopts a:s:u:r:h option
+	do
+	case "${option}"
+	in
+		a) atom=${OPTARG};;
+		s) space=${OPTARG};;
+		u) unit=${OPTARG};;
+		r) resolution=${OPTARG};;
+		h) echo "Run using gen_xia2_dials -a scatteringatom -s spacegroupname -u 'unitcell constants (a b c al be ga') -r highrescutoff" >&2
+      exit 1
+	esac
+done
+
+cat <<EOT >> xia2.sh
+xia2 pipeline=dials ./xia2_dials.phil /images/here
+EOT
+
+chmod +x xia2.sh
+
+cat <<EOT >> xia2_dials.phil
+general.check_image_files_readable=True
+dials.fix_geometry=False
+dials.outlier.algorithm=auto
+dials.check_indexing_symmetry=False
+dials.fast_mode=False
+dials.close_to_spindle_cutoff=0.02
+dials.detect_blanks.phi_step=2.0
+dials.detect_blanks.counts_fractional_loss=0.1
+dials.detect_blanks.misigma_fractional_loss=0.1
+dials.masking.border=0
+dials.masking.use_trusted_range=True
+dials.masking.untrusted.panel=0
+dials.masking.ice_rings.filter=False
+dials.masking.ice_rings.width=0.002
+dials.find_spots.min_local=0
+dials.find_spots.filter_ice_rings=False
+dials.find_spots.kernel_size=3
+dials.index.method=fft3d
+dials.index.max_cell=0.0
+dials.index.reflections_per_degree=100
+dials.refine.scan_static=True
+dials.refine.scan_varying=True
+dials.refine.interval_width_degrees=36.0
+dials.refine.reflections_per_degree=100
+dials.integrate.background_outlier_algorithm=null
+dials.integrate.background_algorithm=glm
+dials.integrate.combine_partials=True
+dials.integrate.partiality_threshold=0.99
+dials.integrate.mosaic=old
+dials.scale.model=physical
+dials.scale.rotation_spacing=15.0
+dials.scale.Bfactor=True
+dials.scale.absorption=True
+dials.scale.physical_model.Bfactor_spacing=20.0
+dials.scale.physical_model.lmax=4
+dials.scale.array_model.resolution_bins=10
+dials.scale.array_model.absorption_bins=3
+dials.scale.intensity_choice=combine
+dials.scale.optimise_errors=True
+dials.scale.full_matrix=True
+dials.scale.outlier_rejection=standard
+dials.scale.outlier_zmax=6.0
+ccp4.reindex.program=pointless
+ccp4.aimless.intensities=combine
+ccp4.aimless.surface_tie=0.001
+ccp4.aimless.surface_link=True
+ccp4.aimless.rotation.spacing=5
+ccp4.aimless.secondary.frame=crystal
+ccp4.aimless.secondary.lmax=6
+ccp4.truncate.program=ctruncate
+xia2.settings.small_molecule=False
+xia2.settings.small_molecule_bfactor=True
+xia2.settings.failover=True
+xia2.settings.multi_crystal=True
+xia2.settings.interactive=False
+xia2.settings.project=AUTOMATIC
+xia2.settings.crystal=DEFAULT
+xia2.settings.input.atom=$atom
+xia2.settings.input.anomalous=Auto
+xia2.settings.input.reverse_phi=False
+xia2.settings.input.min_images=10
+xia2.settings.input.tolerance.beam.wavelength=1e-06
+xia2.settings.input.tolerance.beam.direction=1e-06
+xia2.settings.input.tolerance.beam.polarization_normal=1e-06
+xia2.settings.input.tolerance.beam.polarization_fraction=1e-06
+xia2.settings.input.tolerance.detector.fast_axis=1e-06
+xia2.settings.input.tolerance.detector.slow_axis=1e-06
+xia2.settings.input.tolerance.detector.origin=0.05
+xia2.settings.input.tolerance.goniometer.rotation_axis=1e-06
+xia2.settings.input.tolerance.goniometer.fixed_rotation=1e-06
+xia2.settings.input.tolerance.goniometer.setting_rotation=1e-06
+xia2.settings.input.tolerance.scan.oscillation=0.01
+xia2.settings.input.geometry.detector.panel.id=0
+xia2.settings.input.geometry.goniometer.invert_rotation_axis=False
+xia2.settings.input.geometry.scan.extrapolate_scan=False
+xia2.settings.input.geometry.convert_stills_to_sweeps=False
+xia2.settings.input.geometry.convert_sweeps_to_stills=False
+xia2.settings.input.format.dynamic_shadowing=Auto
+xia2.settings.input.format.multi_panel=False
+xia2.settings.sweep.exclude=False
+xia2.settings.scale.directory=Auto
+xia2.settings.scale.free_fraction=0.05
+xia2.settings.scale.model=*decay *modulation *absorption partiality
+xia2.settings.scale.scales=rotation
+xia2.settings.scale.two_theta_refine=True
+xia2.settings.space_group=$space
+xia2.settings.unit_cell=$unit
+xia2.settings.resolution.keep_all_reflections=Auto
+xia2.settings.resolution.d_max=1000.0
+xia2.settings.resolution.d_min=$resolution
+xia2.settings.resolution.cc_ref=0.1
+xia2.settings.resolution.cc_half=0.3
+xia2.settings.resolution.cc_half_method=half_dataset
+xia2.settings.resolution.cc_half_significance_level=0.1
+xia2.settings.resolution.cc_half_fit=tanh
+xia2.settings.resolution.isigma=0.25
+xia2.settings.resolution.misigma=1.0
+xia2.settings.resolution.nbins=100
+xia2.settings.resolution.binning_method=counting_sorted
+xia2.settings.resolution.anomalous=False
+xia2.settings.unify_setting=False
+xia2.settings.trust_beam_centre=False
+xia2.settings.wavelength_tolerance=5e-05
+xia2.settings.read_all_image_headers=True
+xia2.settings.show_template=False
+xia2.settings.xds_check_cell_deviation=False
+xia2.settings.use_brehm_diederichs=False
+xia2.settings.integration.profile_fitting=True
+xia2.settings.integration.exclude_ice_regions=False
+xia2.settings.developmental.use_dials_spotfinder=False
+xia2.settings.developmental.pointless_tolerance=0.0
+xia2.settings.multi_sweep_indexing=Auto
+xia2.settings.remove_blanks=False
+xia2.settings.integrate_p1=False
+xia2.settings.reintegrate_correct_lattice=True
+xia2.settings.lattice_rejection=True
+xia2.settings.lattice_rejection_threshold=1.5
+xia2.settings.merging_statistics.source=cctbx
+xia2.settings.merging_statistics.n_bins=20
+xia2.settings.merging_statistics.use_internal_variance=False
+xia2.settings.merging_statistics.eliminate_sys_absent=False
+xia2.settings.verbose=False
+xia2.settings.multiprocessing.mode=serial
+xia2.settings.multiprocessing.nproc=20
+xia2.settings.multiprocessing.type=simple
+xia2.settings.report.resolution_bins=20
+xia2.settings.report.anomalous=False
+xia2.settings.report.use_internal_variance=False
+xia2.settings.report.eliminate_sys_absent=False
+xia2.settings.report.range.width=1.0
+xia2.settings.report.cc_half_significance_level=0.01
+xia2.settings.report.cc_half_method=half_dataset
+xia2.settings.report.dose.remove_gaps=True
+xia2.settings.report.xtriage_analysis=True
+xia2.settings.report.include_radiation_damage=True
+xia2.settings.report.include_probability_plots=False
+xia2.settings.symmetry.program=pointless
+EOT
