@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 # C.Orr 2020
 
 cat <<EOT >> xia2.sh
