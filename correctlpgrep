@@ -1,0 +1,6 @@
+#!bin/bash
+# C.Orr 2020
+
+find . -name "CORRECT.LP" | xargs grep "WILSON STATISTICS OF DATA SET" -B 26 > correct.txt
+
+gedit correct.txt

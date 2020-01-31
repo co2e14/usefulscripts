@@ -1,0 +1,10 @@
+#!bin/bash
+# C.Orr 2020
+
+module load global/cluster
+chmod +x xia2.sh
+
+echo `pwd`
+qsub -P i23 -q low.q -l mfree=8G -pe smp 20 -cwd ./xia2.sh > tmp
+sleep 6
+tail -f xia2.sh.o`awk '{print $3}' tmp`

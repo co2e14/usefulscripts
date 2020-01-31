@@ -1,0 +1,10 @@
+#!bin/bash
+# C.Orr 2020
+
+#script to run pointless and aimless on XDS_ASCII with default params
+
+pointless HKLIN XDS_ASCII.HKL HKLOUT pointless.mtz
+
+aimless HKLIN pointless.mtz HKLOUT scaled.mtz --no-input
+
+

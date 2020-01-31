@@ -1,0 +1,26 @@
+#!/bin/bash
+# A script to make inverse beam single sweep. The sub datasets cannot overlap.
+#cmd: siswee prefixA prefixB output_prefix offset
+
+prefixA=$1
+prefixB=$2
+out=$3
+count=$4
+
+
+ls $prefixA* | grep -P "$prefix[0-9]{1,}.cbf" | grep -Po "[0-9]{1,}.cbf" | sed "s/\([0-9]\{1,\}\)\.cbf/\1/" > dataA.list
+ls $prefixB* | grep -P "$prefix[0-9]{1,}.cbf" | grep -Po "[0-9]{1,}.cbf" | sed "s/\([0-9]\{1,\}\)\.cbf/\1/" > dataB.list
+
+#count=0
+
+while read num 
+do
+	ln -s $prefixA$num.cbf $out$num.cbf
+#	let count=$count+1 
+done < dataA.list
+
+while read old 
+do
+	let num=10#$old+$count
+	ln -s $prefixB$old.cbf $out'0'$num.cbf
+done < dataB.list

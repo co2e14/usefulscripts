@@ -1,0 +1,14 @@
+#!bin/bash
+# C.Orr 2020
+
+echo 'autoPROC_XdsKeyword_MINIMUM_FRACTION_OF_INDEXED_SPOTS= 0.1' > MFOIS.txt
+
+echo 'module load autoPROC' > autoPROC.sh
+echo '' >> autoPROC.sh
+echo 'process ' >> autoPROC.sh
+echo '  ' >> autoPROC.sh
+echo '-M DiamondI23 -M ./MFOIS.txt -nthreads=20 -R="1000.0 0.1" cell="a b c al be ga" symm="P1" \' >> autoPROC.sh
+echo '-d ./output > log' >> autoPROC.sh
+
+chmod +x autoPROC.sh
+

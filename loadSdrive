@@ -1,0 +1,8 @@
+#!bin/bash
+# C.Orr 2020
+
+cd /scratch
+mkdir S_$USER
+
+mountwindowsS S_$USER
+

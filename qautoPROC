@@ -1,0 +1,9 @@
+#!/bin/bash
+# C.Orr 2020
+
+module load global/cluster
+
+echo `pwd`
+qsub -P i23 -l mfree=8G -q medium.q -pe smp 20 -cwd ./autoPROC.sh > tmp
+sleep 5
+tail -f log
